@@ -1,0 +1,16 @@
+S01 before_opus_h1
+S02 before_gpt_h1
+S03 v4_gpt_h1
+S04 v4_opus_h1
+S05 before_opus_h2
+S06 before_gpt_h2
+S07 v4_gpt_h2
+S08 v4_opus_h2
+S09 before_opus_h3
+S10 before_gpt_h3
+S11 v4_gpt_h3
+S12 v4_opus_h3
+S13 before_opus_h4
+S14 before_gpt_h4
+S15 v4_gpt_h4
+S16 v4_opus_h4

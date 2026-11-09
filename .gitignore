@@ -1,0 +1,5 @@
+.claude/settings.local.json
+eval/**/.gpt_*.log
+eval/**/.judge_gemini.log
+eval/**/.gemini_run.log
+eval/rounds/*.gen.log

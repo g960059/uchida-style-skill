@@ -1,0 +1,8 @@
+S01 gpt_t1.md
+S02 opus_t3.md
+S03 opus_t2.md
+S04 opus_t1.md
+S05 gpt_t2.md
+S06 gpt_t4.md
+S07 gpt_t3.md
+S08 opus_t4.md

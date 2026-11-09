@@ -1,0 +1,398 @@
+<title>内田樹スタイル 前後比較</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;800&family=Noto+Serif+JP:wght@400;600&family=IBM+Plex+Sans+JP:wght@400;500;600&display=swap">
+<style>
+/* 校正刷りを並べて読む机：左に適用前（鉛筆の灰）、右に適用後（藍）。原文は朱の枠、対比文型は赤ペンの下線 */
+:root {
+  --paper: #f5f6f8;
+  --sheet: #ffffff;
+  --ink: #1c2130;
+  --muted: #5b6375;
+  --rule: #d8dce4;
+  --before: #7b8190;
+  --after: #284a8e;
+  --after-soft: #e7ecf6;
+  --orig: #8a5a12;
+  --orig-soft: #f7efe1;
+  --red: #b8392a;
+  --red-soft: #fbe9e5;
+  --font-display: "Shippori Mincho B1", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --font-body: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --font-ui: "IBM Plex Sans JP", "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #13161c; --sheet: #1a1e26; --ink: #e5e8ef; --muted: #9aa2b4; --rule: #2d333f;
+    --before: #9aa0ae; --after: #93aee6; --after-soft: #1f2a40; --orig: #e0b46a; --orig-soft: #33291a;
+    --red: #f08a74; --red-soft: #3a211d;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #13161c; --sheet: #1a1e26; --ink: #e5e8ef; --muted: #9aa2b4; --rule: #2d333f;
+  --before: #9aa0ae; --after: #93aee6; --after-soft: #1f2a40; --orig: #e0b46a; --orig-soft: #33291a;
+  --red: #f08a74; --red-soft: #3a211d;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font-family: var(--font-ui); font-size: 14px; line-height: 1.65; }
+.wrap {
+  max-width: 1240px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 64px;
+  display: grid; gap: 40px;
+}
+section { display: grid; gap: 14px; min-width: 0; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; }
+h1 { font-weight: 800; font-size: clamp(26px, 4vw, 38px); line-height: 1.25; letter-spacing: 0.02em; }
+h2 { font-weight: 800; font-size: 23px; line-height: 1.35; }
+h2 small { font-family: var(--font-ui); font-weight: 500; font-size: 12px; color: var(--muted); letter-spacing: 0.06em; display: block; margin-bottom: 4px; }
+.lead { margin: 10px 0 0; color: var(--muted); max-width: 64em; font-size: 15px; }
+.note { font-size: 12.5px; color: var(--muted); margin: 0; max-width: 72em; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; color: var(--muted); font-size: 13px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+.sw.sq { border-radius: 2px; }
+
+/* 要点 */
+.findings { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 900px) { .findings { grid-template-columns: 1fr; } }
+.finding { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 16px 18px; display: grid; gap: 6px; align-content: start; }
+.finding .k { font-size: 12px; color: var(--muted); letter-spacing: 0.04em; }
+.finding .v { font-family: var(--font-display); font-size: 26px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.3; }
+.finding .v .b { color: var(--before); font-weight: 600; }
+.finding .v .a { color: var(--after); }
+.finding .v .arrow { color: var(--muted); font-weight: 400; margin: 0 4px; font-size: 20px; }
+.finding p { margin: 0; color: var(--muted); font-size: 13px; }
+
+/* ダンベル図 */
+.charts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 900px) { .charts { grid-template-columns: 1fr; } }
+.chart { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 16px 10px; min-width: 0; }
+.chart h3 { font-size: 16px; margin-bottom: 6px; }
+.chart svg { width: 100%; height: auto; display: block; }
+.chart svg text { font-family: var(--font-ui); fill: var(--muted); }
+.chart svg .lab { fill: var(--ink); }
+.chart svg .grid { stroke: var(--rule); }
+.chart svg .seg { stroke-width: 2; }
+
+/* 表 */
+.tablebox { overflow-x: auto; background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+th, td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--rule); white-space: nowrap; vertical-align: top; }
+thead th { font-size: 12px; font-weight: 500; color: var(--muted); letter-spacing: 0.03em; }
+tbody tr:last-child td, tbody tr:last-child th { border-bottom: 0; }
+tbody th { font-weight: 600; }
+tbody th small, td small { display: block; font-weight: 400; color: var(--muted); font-size: 12px; }
+tr.avg th, tr.avg td { background: var(--paper); }
+td a { color: var(--orig); }
+.reading { background: var(--sheet); border: 1px solid var(--rule); border-left: 4px solid var(--orig); border-radius: 6px; padding: 14px 18px; max-width: 72em; }
+.reading p { margin: 0; }
+.reading p + p { margin-top: 8px; }
+.num { font-size: 15px; font-weight: 600; }
+.num.b { color: var(--before); } .num.a { color: var(--after); } .num.o { color: var(--orig); }
+.rk { font-size: 12px; color: var(--muted); }
+.cell { appearance: none; border: 1px solid transparent; background: none; color: inherit; font: inherit; padding: 3px 7px; border-radius: 4px; cursor: pointer; display: inline-flex; gap: 8px; align-items: baseline; text-align: left; }
+.cell:hover { border-color: var(--rule); }
+.cell.on { background: var(--after-soft); border-color: var(--after); }
+.sc .b { color: var(--before); font-weight: 500; } .sc .a { color: var(--after); font-weight: 600; } .sc .arrow { color: var(--muted); margin: 0 3px; }
+.sc { font-size: 15px; } .sc-g { font-size: 12px; color: var(--muted); }
+.down { color: var(--red) !important; }
+.tag { display: inline-block; font-size: 11px; font-weight: 500; border: 1px solid currentColor; border-radius: 3px; padding: 0 5px; margin-left: 6px; vertical-align: 1px; }
+.tag.fresh { color: var(--after); } .tag.orig { color: var(--orig); }
+:focus-visible { outline: 2px solid var(--after); outline-offset: 2px; }
+
+/* 読み比べ */
+.controls { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; }
+.seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; background: var(--sheet); }
+.seg button { appearance: none; border: 0; background: none; color: var(--muted); font: inherit; font-weight: 500; padding: 7px 14px; cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--rule); }
+.seg button[aria-pressed="true"] { background: var(--after); color: var(--sheet); }
+.ctl-label { font-size: 12px; color: var(--muted); letter-spacing: 0.04em; margin-right: 8px; }
+.toggle { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: var(--muted); }
+.toggle input { accent-color: var(--red); width: 16px; height: 16px; }
+select { font: inherit; padding: 6px 10px; border: 1px solid var(--rule); border-radius: 6px; background: var(--sheet); color: var(--ink); max-width: 100%; }
+.task h3 { font-size: 22px; margin: 0 0 4px; }
+.task .genre { font-size: 13px; color: var(--muted); }
+.task .prompt { margin: 8px 0 0; color: var(--muted); max-width: 64em; }
+details.orig { margin-top: 12px; background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 12px 16px; }
+details.orig summary { cursor: pointer; font-weight: 500; }
+details.orig p { font-family: var(--font-body); font-size: 15px; line-height: 1.9; margin: 10px 0 0; text-indent: 1em; color: var(--muted); }
+.origcard { margin-top: 12px; background: var(--orig-soft); border: 1px solid var(--orig); border-radius: 6px; padding: 14px 18px; display: grid; gap: 6px; }
+.origcard strong { color: var(--orig); }
+.origcard a { color: var(--orig); font-weight: 600; }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+@media (max-width: 860px) { .pair { grid-template-columns: 1fr; } }
+.sheet { min-width: 0; background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; }
+.sheet-head { padding: 14px 20px 12px; border-bottom: 1px solid var(--rule); display: grid; gap: 8px; }
+.sheet.before .sheet-head { border-top: 4px solid var(--before); }
+.sheet.after .sheet-head { border-top: 4px solid var(--after); }
+.cond { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.cond strong { font-size: 15px; }
+.sheet.before .cond strong { color: var(--before); } .sheet.after .cond strong { color: var(--after); }
+.cond small { color: var(--muted); font-size: 12px; }
+.scores { display: flex; gap: 6px 16px; font-variant-numeric: tabular-nums; font-size: 13px; color: var(--muted); flex-wrap: wrap; align-items: baseline; }
+.scores b { font-size: 18px; color: var(--ink); font-weight: 600; margin-left: 3px; }
+.axes { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 2px 10px; font-size: 11.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.axes span b { color: var(--ink); font-weight: 600; }
+.stats { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.stats .hit { color: var(--red); font-weight: 600; }
+.text { padding: 18px 24px 26px; font-family: var(--font-body); font-size: 16.5px; line-height: 1.95; }
+.text h4 { font-family: var(--font-display); font-weight: 600; font-size: 19px; margin: 0 0 14px; }
+.text p { margin: 0 0 0.9em; text-indent: 1em; }
+mark { background: none; color: inherit; }
+.hl mark.pair { background: var(--red-soft); box-shadow: inset 0 -2px 0 var(--red); }
+.hl mark.inline { box-shadow: inset 0 -2px 0 var(--red); }
+.method { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 860px) { .method { grid-template-columns: 1fr; } }
+.method div { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 14px 18px; }
+.method h3 { font-size: 16px; margin-bottom: 6px; }
+.method ul { margin: 0; padding-left: 1.2em; color: var(--muted); }
+.method li + li { margin-top: 4px; }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>内田樹スタイル 前後比較</h1>
+    <p class="lead">このskillの目的は、内田樹をコピーすることではなく、文章からAI臭さを消し、展開に起伏を足し、読ませる文章にすることです。内田樹の文体はその手本として使っています。ここでは、skillを与える前と後の文章を、GPT 6 astra と Claude Opus 5.5 に書かせ、文体の再現度とは無関係に「読み物として」の評価で比べた結果をまとめました。</p>
+  </header>
+
+  <section aria-labelledby="s-find">
+    <h2 id="s-find"><small>要点</small>読み物として、何が変わったか</h2>
+    <div class="findings" id="findings"></div>
+  </section>
+
+  <section aria-labelledby="s-chart">
+    <h2 id="s-chart"><small>読み物としての評価・8テーマ（H1〜H8）</small>項目ごとの変化</h2>
+    <div class="legend">
+      <span><i class="sw" style="background:var(--before)"></i>適用前（skillなし、「内田樹の文体で」と指示）</span>
+      <span><i class="sw" style="background:var(--after)"></i>適用後（skill v4）</span>
+      <span>上段の線＝GPT 6 astra、下段の線＝Opus 5.5</span>
+    </div>
+    <div class="charts" id="charts"></div>
+    <p class="note">審査員には、内田樹のこともskillのことも伝えていません。書き手と条件を伏せ、適用前と適用後を同じ束に混ぜて、10点満点で採点させました（「もっと読みたい」は0〜100%を10で割って表示）。審査員：Claude Opus 5.5（xhigh）と Gemini 4 Argon（high）。</p>
+  </section>
+
+  <section aria-labelledby="s-orig">
+    <h2 id="s-orig"><small>原文との比較・4テーマ（O1〜O4）</small>内田樹の原文、適用前、適用後</h2>
+    <p class="note">内田樹のブログ「内田樹の研究室」の記事4本と同じテーマ・形式・字数で、論旨は伝えずに書かせました。原文を含む5本を書き手を伏せて混ぜ、同じ「読み物としての評価」にかけています。数字は総合点（Opus審査／Gemini審査）と、5本の中での順位（Opus審査）です。原文は著作権のため本文を載せず、記事へのリンクだけを置いています。原文は実在の出来事や人名を含むので、審査員がそこから人間の文章だと見分けた可能性があります。</p>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>テーマ</th><th>原文</th><th>GPT 適用前</th><th>GPT 適用後</th><th>Opus 適用前</th><th>Opus 適用後</th></tr></thead>
+        <tbody id="origtab"></tbody>
+      </table>
+    </div>
+    <div class="reading" id="origread"></div>
+  </section>
+
+  <section aria-labelledby="s-read">
+    <h2 id="s-read"><small>読み比べ</small>12テーマの文章</h2>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>テーマ</th><th>GPT 6 astra　Opus審査（Gemini審査）</th><th>Opus 5.5　Opus審査（Gemini審査）</th></tr></thead>
+        <tbody id="ov"></tbody>
+      </table>
+    </div>
+    <p class="note">数字は読み物としての総合点「適用前→適用後」。表の数字を押すと、その文章が下に表示されます。</p>
+    <div class="controls">
+      <div><span class="ctl-label">テーマ</span><select id="topic" aria-label="テーマ"></select></div>
+      <div><span class="ctl-label">書き手</span><span class="seg" role="group" aria-label="書き手">
+        <button type="button" data-m="gpt">GPT 6 astra</button><button type="button" data-m="opus">Opus 5.5</button>
+      </span></div>
+      <label class="toggle"><input type="checkbox" id="hl" checked> 「〜ではない。〜である」型に下線を引く</label>
+    </div>
+    <div class="task" id="task"></div>
+    <div class="pair" id="pair"></div>
+  </section>
+
+  <section aria-labelledby="s-method">
+    <h2 id="s-method"><small>進め方と限界</small>このページの数字について</h2>
+    <div class="method">
+      <div>
+        <h3>skillの作り方</h3>
+        <ul>
+          <li>GPT 6 astra と Opus 5.5 に書かせ、Gemini 4 Argon と Opus 5.5 に「内田樹らしさ」を採点させる改善を4ラウンド回しました（総合点は Opus審査で GPT 2.5→5.2、Opus 5.5→6.2）。</li>
+          <li>「〜ではない、〜である」型の頻度と、全体の情報開示・展開の設計を、機械計測と審査項目の両方で追いました。</li>
+          <li>改善ループで使っていないテーマで、過剰適合がないかを確かめました。点数は新テーマでも上がりましたが、文章の型の均質化と、skillの例文の写しという過剰適合が見つかり、v4・v4.1で直しました。</li>
+        </ul>
+      </div>
+      <div>
+        <h3>読むときの注意</h3>
+        <ul>
+          <li>Gemini は全体に Opus より甘く、同じ文章に1〜2点高い点を付けます。条件間の順位は両審査員でほぼ一致しました。</li>
+          <li>H1〜H8 の「文体の再現度」は、適用前と適用後を別々の束で採点したので参考値です。読み物としての評価は同じ束で採点しています。</li>
+          <li>O1〜O4 の適用後は v4.1、H1〜H8 の適用後は v4 です（v4.1 はskill内の例文を削っただけの差分）。</li>
+          <li>テーマは各4〜8本と少なく、数字の細かな差には意味がありません。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script id="data" type="application/json">__DATA__</script>
+<script>
+const D = JSON.parse(document.getElementById('data').textContent);
+const T = D.topics;
+const AX = [['interest','面白さ'],['readability','読みやすさ'],['immersion','没頭感'],['exhilaration','痛快感'],['insight','発見'],['dynamics','展開の起伏'],['voice','声の生気'],['no_ai_smell','AI臭のなさ'],['memorability','記憶に残る'],['read_more','もっと読みたい'],['overall','総合']];
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const num = v => (v === null || v === undefined) ? '—' : v;
+const f1 = v => (v === null || v === undefined) ? '—' : (Math.round(v * 10) / 10).toFixed(1);
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const S = D.summary.heldout, SO = D.summary.orig, W = D.wins;
+const sv = (sum, j, w, c, k) => sum[`${j}|${w}|${c}`]?.[k];
+const winOf = (prefix, j, w, kind) => { let a = 0, n = 0; for (const [k, v] of Object.entries(W)) { const [d, jj, ww, kk] = k.split('|'); if (prefix.includes(d) && jj === j && ww === w && kk === kind) { a += v[0]; n += v[1]; } } return [a, n]; };
+
+// 要点
+(function findings() {
+  const box = document.getElementById('findings');
+  const card = (k, body, p) => `<div class="finding"><div class="k">${k}</div>${body}<p>${p}</p></div>`;
+  const pair = (j, w) => `<span class="b">${f1(sv(S, j, w, 'before', 'overall'))}</span><span class="arrow">→</span><span class="a">${f1(sv(S, j, w, 'after', 'overall'))}</span>`;
+  const [gw, gn] = winOf(['R1', 'R2'], 'opus', 'gpt'), [ow, on] = winOf(['R1', 'R2'], 'opus', 'opus');
+  const winsAll = ['opus', 'gemini'].flatMap(j => ['gpt', 'opus'].map(w => winOf(['R1', 'R2'], j, w, 'after>before'))).reduce((s, [a, n]) => [s[0] + a, s[1] + n], [0, 0]);
+  const r3 = Object.keys(W).find(k => k.endsWith('after>orig'))?.split('|')[0];
+  const ao = ['opus', 'gemini'].flatMap(j => ['gpt', 'opus'].map(w => winOf([r3], j, w, 'after>orig'))).reduce((s, [a, n]) => [s[0] + a, s[1] + n], [0, 0]);
+  const bo = ['opus', 'gemini'].flatMap(j => ['gpt', 'opus'].map(w => winOf([r3], j, w, 'before>orig'))).reduce((s, [a, n]) => [s[0] + a, s[1] + n], [0, 0]);
+  box.innerHTML =
+    card('読み物としての総合点（Opus審査・8テーマ平均）',
+      `<div class="v">GPT ${pair('opus', 'gpt')}</div><div class="v">Opus ${pair('opus', 'opus')}</div>`,
+      `Gemini審査では GPT ${f1(sv(S, 'gemini', 'gpt', 'before', 'overall'))}→${f1(sv(S, 'gemini', 'gpt', 'after', 'overall'))}、Opus ${f1(sv(S, 'gemini', 'opus', 'before', 'overall'))}→${f1(sv(S, 'gemini', 'opus', 'after', 'overall'))}。読みやすさはほぼ変わらず、面白さ・痛快感・発見・AI臭のなさが大きく上がりました。`) +
+    card('同じテーマの中で、適用後のほうが上位に置かれた割合',
+      `<div class="v"><span class="a">${winsAll[0]}</span><span class="arrow">/</span>${winsAll[1]}</div>`,
+      `2人の審査員 × 2つの書き手 × 8テーマの順位付けのうち、適用後が適用前より上だった回数。`) +
+    card('内田樹の原文と比べて（4テーマ・順位）',
+      `<div class="v"><span class="a">${ao[0]}</span><span class="arrow">/</span>${ao[1]}<span style="font-size:14px;color:var(--muted);font-weight:500;font-family:var(--font-ui)">　適用後が原文より上</span></div><div class="v"><span class="b">${bo[0]}</span><span class="arrow">/</span>${bo[1]}<span style="font-size:14px;color:var(--muted);font-weight:500;font-family:var(--font-ui)">　適用前が原文より上</span></div>`,
+      `2人の審査員 × 2つの書き手 × 4テーマで、原文より上位に置かれた回数。下の表で個別の順位を見られます。`);
+})();
+
+// ダンベル図
+function charts() {
+  const box = document.getElementById('charts');
+  const W0 = 560, rowH = 30, top = 26, left = 104, right = 16, H0 = top + AX.length * rowH + 8;
+  const x = v => left + (v - 1) / 9 * (W0 - left - right);
+  box.innerHTML = ['opus', 'gemini'].map(j => {
+    let g = '';
+    for (let t = 1; t <= 10; t += 1) g += `<line class="grid" x1="${x(t)}" x2="${x(t)}" y1="${top - 8}" y2="${H0 - 6}" stroke-width="${t % 5 === 0 ? 1 : 0.5}"/>` + (t % 1 === 0 && (t === 1 || t % 2 === 0) ? `<text x="${x(t)}" y="${top - 12}" font-size="10" text-anchor="middle">${t}</text>` : '');
+    AX.forEach(([k, lab], i) => {
+      const y = top + i * rowH + 8;
+      g += `<text class="lab" x="0" y="${y + 6}" font-size="12">${lab}</text>`;
+      [['gpt', -5], ['opus', 6]].forEach(([w, dy]) => {
+        let b = sv(S, j, w, 'before', k), a = sv(S, j, w, 'after', k);
+        if (k === 'read_more') { b = b / 10; a = a / 10; }
+        if (b == null || a == null) return;
+        const yy = y + dy;
+        const op = w === 'gpt' ? 1 : 0.65;
+        g += `<line class="seg" x1="${x(b)}" x2="${x(a)}" y1="${yy}" y2="${yy}" stroke="${css('--rule')}"/>`;
+        g += `<circle cx="${x(b)}" cy="${yy}" r="4" fill="${css('--before')}" fill-opacity="${op}"><title>${w === 'gpt' ? 'GPT' : 'Opus'} 適用前 ${f1(b)}</title></circle>`;
+        g += `<circle cx="${x(a)}" cy="${yy}" r="4.5" fill="${css('--after')}" fill-opacity="${op}"><title>${w === 'gpt' ? 'GPT' : 'Opus'} 適用後 ${f1(a)}</title></circle>`;
+        if (w === 'opus' || true) g += `<text x="${Math.max(x(a), x(b)) + 8}" y="${yy + 4}" font-size="10">${w === 'gpt' ? 'G' : 'O'} ${f1(a)}</text>`;
+      });
+    });
+    return `<div class="chart"><h3>${j === 'opus' ? 'Opus 5.5 審査' : 'Gemini 4 Argon 審査'}</h3><svg viewBox="0 0 ${W0} ${H0}" role="img" aria-label="${j === 'opus' ? 'Opus' : 'Gemini'}審査による項目別の点数、適用前と適用後">${g}</svg></div>`;
+  }).join('');
+}
+charts();
+matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', charts);
+new MutationObserver(charts).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+// 原文との比較表
+(function origTable() {
+  const rows = T.filter(t => t.group === 'orig');
+  const c = (r, cls) => r?.opus ? `<span class="num ${cls}">${num(r.opus.overall)}</span><span class="rk">／${num(r.gemini?.overall)}</span><small>${r.opus.rank ?? '—'}位${r.gemini?.rank ? `（Gemini ${r.gemini.rank}位）` : ''}</small>` : '—';
+  let html = rows.map(t => `<tr><th>${esc(t.name)}<small>${t.id.toUpperCase()}・${esc(t.genre)}</small></th>
+    <td>${c(t.orig.reader, 'o')}<small><a href="${esc(t.orig.url)}" target="_blank" rel="noopener">「${esc(t.orig.title)}」</a></small></td>
+    <td>${c(t.pieces.gpt.before.reader, 'b')}</td><td>${c(t.pieces.gpt.after.reader, 'a')}</td>
+    <td>${c(t.pieces.opus.before.reader, 'b')}</td><td>${c(t.pieces.opus.after.reader, 'a')}</td></tr>`).join('');
+  const avg = (j, w, cd) => f1(sv(SO, j, w, cd, 'overall'));
+  html += `<tr class="avg"><th>平均</th><td><span class="num o">${avg('opus', 'uchida', 'orig')}</span><span class="rk">／${avg('gemini', 'uchida', 'orig')}</span></td>
+    <td><span class="num b">${avg('opus', 'gpt', 'before')}</span><span class="rk">／${avg('gemini', 'gpt', 'before')}</span></td>
+    <td><span class="num a">${avg('opus', 'gpt', 'after')}</span><span class="rk">／${avg('gemini', 'gpt', 'after')}</span></td>
+    <td><span class="num b">${avg('opus', 'opus', 'before')}</span><span class="rk">／${avg('gemini', 'opus', 'before')}</span></td>
+    <td><span class="num a">${avg('opus', 'opus', 'after')}</span><span class="rk">／${avg('gemini', 'opus', 'after')}</span></td></tr>`;
+  document.getElementById('origtab').innerHTML = html;
+  const ax = (k, j) => `原文 ${f1(sv(SO, j, 'uchida', 'orig', k))}、適用後 GPT ${f1(sv(SO, j, 'gpt', 'after', k))}／Opus ${f1(sv(SO, j, 'opus', 'after', k))}`;
+  document.getElementById('origread').innerHTML =
+    `<p><strong>読み方。</strong>この評価で原文が適用後より低く出たことは、「skillの文章のほうが内田樹より上手い」という意味にはなりません。原文は、実際の出来事や人名を知っている読者に向けた短い新聞・雑誌コラムで、連載の途中回も含みます。審査員は前提知識なしに一本ずつ読んでいるので、文脈を補わずに書かれた原文には不利です。また、LLMの審査員はLLMが書いた整った文章を高く評価しがちだという偏りも知られています。</p>
+     <p>項目別に見ると違いがはっきりします。どちらの審査でも、原文は読みやすさがいちばん低く（Opus審査：${ax('readability', 'opus')}。Gemini審査：${ax('readability', 'gemini')}）、声の生気では適用後と同等以上でした（Opus審査：${ax('voice', 'opus')}。Gemini審査：${ax('voice', 'gemini')}）。AI臭のなさは、Gemini審査では原文がいちばん高く（${ax('no_ai_smell', 'gemini')}）、Opus審査では適用後と同じくらいでした（${ax('no_ai_smell', 'opus')}）。</p>
+     <p>つまり原文は「人の声」で強く、「前提なしの読みやすさ」で弱い。適用後の文章は、読みやすさと展開の起伏で上回り、声の生気では原文に並ぶところまで来ています。一方、適用前の文章は、読みやすさは高いものの、ほかのほぼすべての項目で原文を下回りました。</p>`;
+})();
+
+// 読み比べ
+const state = { topic: 'o2', model: 'opus', hl: true };
+try { const s = JSON.parse(localStorage.getItem('uchida-compare') || '{}'); if (typeof s.hl === 'boolean') state.hl = s.hl; } catch (e) {}
+const hh = location.hash.replace('#', '').split('-');
+if (T.some(d => d.id === hh[0])) state.topic = hh[0];
+if (hh[1] === 'gpt' || hh[1] === 'opus') state.model = hh[1];
+
+const tagOf = d => d.group === 'fresh' ? '<span class="tag fresh">判断に未使用</span>' : d.group === 'orig' ? '<span class="tag orig">原文あり</span>' : '';
+function cell(d, m) {
+  const p = d.pieces[m], b = p.before.reader, a = p.after.reader;
+  const on = d.id === state.topic && m === state.model ? ' on' : '';
+  const dn = (b.opus?.overall != null && a.opus?.overall != null && a.opus.overall < b.opus.overall) ? ' down' : '';
+  return `<button type="button" class="cell${on}" data-t="${d.id}" data-m="${m}" aria-label="${esc(d.name)}、${m === 'gpt' ? 'GPT' : 'Opus'}の文章を表示">
+    <span class="sc"><span class="b">${num(b.opus?.overall)}</span><span class="arrow">→</span><span class="a${dn}">${num(a.opus?.overall)}</span></span>
+    <span class="sc-g">（${num(b.gemini?.overall)}→${num(a.gemini?.overall)}）</span></button>`;
+}
+function renderOverview() {
+  document.getElementById('ov').innerHTML = T.map(d => `<tr><th>${esc(d.name)}${tagOf(d)}<small>${d.id.toUpperCase()}・${esc(d.genre)}</small></th><td>${cell(d, 'gpt')}</td><td>${cell(d, 'opus')}</td></tr>`).join('');
+}
+function axes(r) {
+  if (!r?.opus) return '';
+  return `<div class="axes">${AX.filter(([k]) => k !== 'overall').map(([k, l]) => `<span>${l} <b>${k === 'read_more' ? num(r.opus[k]) + '%' : num(r.opus[k])}</b></span>`).join('')}</div>`;
+}
+function sheet(kind, p, group) {
+  const label = kind === 'before' ? '適用前' : '適用後';
+  const sub = kind === 'before' ? 'skillなし／「内田樹の文体で」と指示' : (group === 'orig' ? 'skill v4.1' : 'skill v4');
+  const r = p.reader;
+  const rank = r.opus?.rank ? `${r.opus.rank}位／${r.opus.of}本中（Opus）` : '';
+  const style = p.style ? `<span>文体の再現度（参考）<b style="font-size:14px">${num(p.style.opus)}</b>／${num(p.style.gemini)}</span>` : '';
+  return `<article class="sheet ${kind}" aria-label="${label}">
+    <div class="sheet-head">
+      <div class="cond"><strong>${label}</strong><small>${sub}</small></div>
+      <div class="scores"><span>読み物の総合 Opus審査<b>${num(r.opus?.overall)}</b></span><span>Gemini審査<b>${num(r.gemini?.overall)}</b></span><span>${rank}</span>${style}</div>
+      ${axes(r)}
+      <div class="stats">${p.chars.toLocaleString()}字（原稿用紙${(p.chars / 400).toFixed(1)}枚）・${p.paras_n}段落・<span${p.contrast > 0 ? ' class="hit"' : ''}>「〜ではない。〜である」型${p.contrast}回</span></div>
+    </div>
+    <div class="text">${p.title ? `<h4>${esc(p.title)}</h4>` : ''}${p.paras.map(x => `<p>${x}</p>`).join('')}</div>
+  </article>`;
+}
+function render() {
+  const d = T.find(x => x.id === state.topic), p = d.pieces[state.model];
+  document.getElementById('topic').value = d.id;
+  for (const b of document.querySelectorAll('.seg button')) b.setAttribute('aria-pressed', String(b.dataset.m === state.model));
+  document.getElementById('hl').checked = state.hl;
+  let extra = '';
+  if (d.original) extra = `<details class="orig" open><summary>書き換えの元の文章</summary><p>${esc(d.original)}</p></details>`;
+  if (d.orig) {
+    const r = d.orig.reader;
+    extra = `<div class="origcard"><div><strong>内田樹の原文</strong>　<a href="${esc(d.orig.url)}" target="_blank" rel="noopener">「${esc(d.orig.title)}」（内田樹の研究室）</a></div>
+      <div class="scores"><span>読み物の総合 Opus審査<b>${num(r.opus?.overall)}</b></span><span>Gemini審査<b>${num(r.gemini?.overall)}</b></span><span>${r.opus?.rank ? `${r.opus.rank}位／${r.opus.of}本中（Opus）` : ''}</span></div>
+      ${axes(r)}
+      <div class="note">本文は著作権のため載せていません。リンク先で読めます。</div></div>`;
+  }
+  document.getElementById('task').innerHTML = `<h3>${esc(d.name)}${tagOf(d)}</h3><div class="genre">${d.id.toUpperCase()}・${esc(d.genre)}</div><p class="prompt">${esc(d.prompt)}</p>${extra}`;
+  const pair = document.getElementById('pair');
+  pair.innerHTML = sheet('before', p.before, d.group) + sheet('after', p.after, d.group);
+  pair.classList.toggle('hl', state.hl);
+  renderOverview();
+  try { history.replaceState(null, '', `#${d.id}-${state.model}`); } catch (e) {}
+}
+const sel = document.getElementById('topic');
+sel.innerHTML = [['orig', '原文と同じテーマ'], ['heldout', '改善に使っていないテーマ'], ['fresh', '判断に一度も使っていないテーマ']]
+  .map(([g, l]) => `<optgroup label="${l}">${T.filter(d => d.group === g).map(d => `<option value="${d.id}">${d.id.toUpperCase()}　${esc(d.name)}</option>`).join('')}</optgroup>`).join('');
+sel.addEventListener('change', e => { state.topic = e.target.value; render(); });
+for (const b of document.querySelectorAll('.seg button')) b.addEventListener('click', () => { state.model = b.dataset.m; render(); });
+document.getElementById('hl').addEventListener('change', e => {
+  state.hl = e.target.checked;
+  try { localStorage.setItem('uchida-compare', JSON.stringify({ hl: state.hl })); } catch (err) {}
+  document.getElementById('pair').classList.toggle('hl', state.hl);
+});
+document.getElementById('ov').addEventListener('click', e => {
+  const c = e.target.closest('.cell'); if (!c) return;
+  state.topic = c.dataset.t; state.model = c.dataset.m; render();
+  document.getElementById('task').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+});
+render();
+</script>

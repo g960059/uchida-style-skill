@@ -1,0 +1,12 @@
+S01 before_opus_h4
+S02 after_opus_h4
+S03 before_opus_h5
+S04 before_gpt_h4
+S05 before_gpt_h6
+S06 before_gpt_h5
+S07 after_opus_h6
+S08 after_gpt_h6
+S09 after_gpt_h5
+S10 after_opus_h5
+S11 before_opus_h6
+S12 after_gpt_h4
