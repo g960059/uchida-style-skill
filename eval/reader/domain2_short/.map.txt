@@ -1,0 +1,16 @@
+S01 v6_fable_p1
+S02 v5_opus_p1
+S03 v6_opus_p1
+S04 v5_fable_p1
+S05 v5_opus_p2
+S06 v5_fable_p2
+S07 v6_fable_p2
+S08 v6_opus_p2
+S09 v5_fable_p3
+S10 v6_fable_p3
+S11 v6_opus_p3
+S12 v5_opus_p3
+S13 v5_fable_p4
+S14 v6_opus_p4
+S15 v5_opus_p4
+S16 v6_fable_p4

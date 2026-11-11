@@ -35,6 +35,7 @@ eval/                          評価の仕組みと全ラウンドの結果
 
 - 書き手：Claude Opus 5.5（xhigh）と GPT 6 astra（high、codex 経由）
 - 審査：Gemini 4 Argon（high、agy 経由）と Claude Opus 5.5（xhigh）。書き手と条件を伏せ、順番をシャッフルした束で採点した。
+- v6（補助線の領域を広げる変更）以降は、実際の使い手に合わせて書き手を Claude Opus 5.5 と Claude Fable 5.2 にし、審査を Opus 5.5・Gemini 4 Argon・GPT 6 astra（codex 経由）の3人にした。採否は「3人中2人以上が支持し、そろって悪化した審査員がいない」を基準にしている。
 - 採点項目：思考の型、語り口、構成、自然さ、中身、AI臭のなさ、**対比文型の節度**（「〜ではない、〜である」型の頻度と配置）、**情報開示・展開の設計**、総合、本人誤認率。対比文型と展開は機械計測（`eval/scripts/contrast_stats.py`、`flow_stats.py`）も添えて審査員に渡した。
 - 改善案の採否は、審査員の提案をそのまま入れず、理由を付けて判断した（`eval/decisions.md`）。
 - 過剰適合の確認のため、改善ループで使った4課題とは別のテーマ（heldout）で前後比較した。

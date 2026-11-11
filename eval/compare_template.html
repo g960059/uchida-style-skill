@@ -111,6 +111,7 @@ td a { color: var(--orig); }
 .seg button { appearance: none; border: 0; background: none; color: var(--muted); font: inherit; font-weight: 500; padding: 7px 14px; cursor: pointer; }
 .seg button + button { border-left: 1px solid var(--rule); }
 .seg button[aria-pressed="true"] { background: var(--after); color: var(--sheet); }
+.seg button:disabled { opacity: .35; cursor: not-allowed; }
 .ctl-label { font-size: 12px; color: var(--muted); letter-spacing: 0.04em; margin-right: 8px; }
 .toggle { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: var(--muted); }
 .toggle input { accent-color: var(--red); width: 16px; height: 16px; }
@@ -143,7 +144,8 @@ details.orig p { font-family: var(--font-body); font-size: 15px; line-height: 1.
 .text { padding: 18px 24px 26px; font-family: var(--font-body); font-size: 16.5px; line-height: 1.95; }
 .text h4 { font-family: var(--font-display); font-weight: 600; font-size: 19px; margin: 0 0 14px; }
 .text p { margin: 0 0 0.9em; text-indent: 1em; }
-mark { background: none; color: inherit; }
+/* 対比文型の囲みは文中の要素として流す（環境によって inline-block 扱いになり、改行と字下げが崩れたため） */
+mark { display: inline !important; background: none; color: inherit; padding: 0; text-indent: 0; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
 .hl mark.pair { background: var(--red-soft); box-shadow: inset 0 -2px 0 var(--red); }
 .hl mark.inline { box-shadow: inset 0 -2px 0 var(--red); }
 .method { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
@@ -186,6 +188,20 @@ mark { background: none; color: inherit; }
     <p class="note">「改善に使った3課題」は L1 失敗が怖い（5000字）、L2 地方で暮らす・講演録（6000字）、L3 「わかりやすさ」・新書の一章（8000字）。「判断に使っていない2課題」は L4 スポーツ観戦（4000字）、L5 本を読む・講演録（5000字）。数字は「skillなし → 短文用の skill（v4.2） → 長文対応の skill（v5）」。なお、skillなしの Opus は L2 の講演録の冒頭で実在の人物を名乗っていました（このページでは「〇〇」に伏せています）。skill は実在の人物へのなりすましを禁じており、skillありの文章ではこれは起きていません。読む手が鈍った地点は、一般の読者が最初に飛ばし読みしたくなる地点（本文の何%か、100は最後まで）。</p>
   </section>
 
+  <section aria-labelledby="s-v6">
+    <h2 id="s-v6"><small>補助線の領域を広げる（v6）</small>脱線を、思想や武道の外へ</h2>
+    <p class="note">補助線（題材とは関係のなさそうな話への脱線）を、手本の書き手の得意分野（思想・武道・古典・映画・昔の職業）に限らず、生物・工学・物流・職業の現場・遊びなど広い範囲から「効き方」で選ぶ版を v6 としました。依頼に書き手自身の仕事や趣味の手がかりがあれば、その領域から先に探します。この検証から、書き手を実際の使い手（Opus 5.5、Fable 5.2）にし、審査を Opus 5.5・Gemini 4 Argon・GPT 6 astra の3人にしています。課題は改善に使っていない6本で、うち3本は書き手の得意領域を指定しました（物流倉庫、渓流釣り、元看護師）。</p>
+    <div class="tablebox"><table>
+      <thead><tr><th>課題</th><th>書き手</th><th>Opus審査</th><th>Gemini審査</th><th>GPT審査</th></tr></thead>
+      <tbody id="v6tab"></tbody>
+    </table></div>
+    <div class="tablebox"><table>
+      <thead><tr><th>補助線の分類</th><th>書き手</th><th>補助線の本数（6課題）</th><th>領域の種類</th><th>手本に典型的な領域</th><th>反転あり</th><th>事実の危うさ</th></tr></thead>
+      <tbody id="v6dom"></tbody>
+    </table></div>
+    <p class="note">数字は総合点「v5 → v6」。補助線の分類は、各審査員が全24本の補助線を領域ごとに分類したもので、左が v5、右が v6。手本に典型的な領域は、思想・哲学、武道・稽古、古典・伝統芸能、作品、昔の職業の割合です。指定した得意領域は、どの条件でも全サンプルで使われていました。同じ文章でも束が変わると総合が0.5〜1点動いたので、この表の小さな差はぶれの範囲として読んでください。Opus の長文は、この検証と前回の検証（審査 Opus・Gemini）の両方で、全審査員が v6 を改善と判定しました。</p>
+  </section>
+
   <section aria-labelledby="s-orig">
     <h2 id="s-orig"><small>原文との比較・4テーマ（O1〜O4）</small>内田樹の原文、適用前、適用後</h2>
     <p class="note">内田樹のブログ「内田樹の研究室」の記事4本と同じテーマ・形式・字数で、論旨は伝えずに書かせました。原文を含む5本を書き手を伏せて混ぜ、同じ「読み物としての評価」にかけています。数字は総合点（Opus審査／Gemini審査）と、5本の中での順位（Opus審査）です。原文は著作権のため本文を載せず、記事へのリンクだけを置いています。原文は実在の出来事や人名を含むので、審査員がそこから人間の文章だと見分けた可能性があります。</p>
@@ -199,18 +215,18 @@ mark { background: none; color: inherit; }
   </section>
 
   <section aria-labelledby="s-read">
-    <h2 id="s-read"><small>読み比べ</small>17テーマの文章</h2>
+    <h2 id="s-read"><small>読み比べ</small>23テーマの文章</h2>
     <div class="tablebox">
       <table>
-        <thead><tr><th>テーマ</th><th>GPT 6 astra　Opus審査（Gemini審査）</th><th>Opus 5.5　Opus審査（Gemini審査）</th></tr></thead>
+        <thead><tr><th>テーマ</th><th>GPT 6 astra　Opus審査（Gemini審査）</th><th>Opus 5.5　Opus審査（Gemini審査）</th><th>Fable 5.2　Opus審査（Gemini審査）</th></tr></thead>
         <tbody id="ov"></tbody>
       </table>
     </div>
-    <p class="note">数字は読み物としての総合点「適用前→適用後」。表の数字を押すと、その文章が下に表示されます。</p>
+    <p class="note">数字は読み物としての総合点「適用前→適用後」（P1〜P6 は「v5→v6」）。表の数字を押すと、その文章が下に表示されます。</p>
     <div class="controls">
       <div><span class="ctl-label">テーマ</span><select id="topic" aria-label="テーマ"></select></div>
       <div><span class="ctl-label">書き手</span><span class="seg" role="group" aria-label="書き手">
-        <button type="button" data-m="gpt">GPT 6 astra</button><button type="button" data-m="opus">Opus 5.5</button>
+        <button type="button" data-m="gpt">GPT 6 astra</button><button type="button" data-m="opus">Opus 5.5</button><button type="button" data-m="fable">Fable 5.2</button>
       </span></div>
       <label class="toggle"><input type="checkbox" id="hl" checked> 「〜ではない。〜である」型に下線を引く</label>
     </div>
@@ -235,7 +251,8 @@ mark { background: none; color: inherit; }
           <li>Gemini は全体に Opus より甘く、同じ文章に1〜2点高い点を付けます。条件間の順位は両審査員でほぼ一致しました。</li>
           <li>H1〜H8 の「文体の再現度」は、適用前と適用後を別々の束で採点したので参考値です。読み物としての評価は同じ束で採点しています。</li>
           <li>O1〜O4 の適用後は v4.1、H1〜H8 の適用後は v4、L1〜L5（長文）の適用後は v5 です。v4.2 で短文の手直し（段落の詰め込み、貸し借りの語彙、矛先を自分に、実在の素材）を入れ、H1・H5・H7・H8 で v4 より読み物として良くなることを確かめています（Opus審査 GPT 6.5→7.0、Opus 6.0→7.75）。</li>
-          <li>テーマは各4〜8本と少なく、数字の細かな差には意味がありません。</li>
+          <li>テーマは各4〜8本と少なく、数字の細かな差には意味がありません。同じ文章でも、一緒に採点する束が変わると総合が0.5〜1点動きました。</li>
+          <li>P1〜P6（v6 の検証）は、書き手を Opus 5.5・Fable 5.2、審査を Opus 5.5・Gemini 4 Argon・GPT 6 astra にしています。それ以前の検証は、書き手が GPT 6 astra・Opus 5.5、審査が Opus 5.5・Gemini 4 Argon です。</li>
         </ul>
       </div>
     </div>
@@ -324,6 +341,30 @@ new MutationObserver(charts).observe(document.documentElement, { attributes: tru
   document.getElementById('longtab').innerHTML = h;
 })();
 
+// v6 の表
+(function v6Tables() {
+  const WN = { opus: 'Opus 5.5', fable: 'Fable 5.2' };
+  const one = (sum, j, w) => {
+    const b = sv(sum, j, w, 'v5', 'overall'), a = sv(sum, j, w, 'v6', 'overall');
+    const dn = (a != null && b != null && a < b) ? ' down' : '';
+    return `<span class="num b">${f1(b)}</span><span class="rk"> → </span><span class="num a${dn}">${f1(a)}</span>`;
+  };
+  let h = '';
+  for (const [g, gl] of [['v6_short', '短文4課題'], ['v6_long', '長文2課題']]) for (const w of ['fable', 'opus'])
+    h += `<tr><th>${gl}</th><td>${WN[w]}</td>${['opus', 'gemini', 'gpt'].map(j => `<td>${one(D.summary[g], j, w)}</td>`).join('')}</tr>`;
+  document.getElementById('v6tab').innerHTML = h;
+  const JN = { opus: 'Opus審査', gemini: 'Gemini審査', gpt: 'GPT審査' };
+  const pr = (j, w, k, fmt) => {
+    const b = D.domain[`${j}|${w}|v5`]?.[k], a = D.domain[`${j}|${w}|v6`]?.[k];
+    return `<span class="num b">${fmt(b)}</span><span class="rk"> → </span><span class="num a">${fmt(a)}</span>`;
+  };
+  const pc = v => v == null ? '—' : Math.round(v * 100) + '%', n = v => v == null ? '—' : v;
+  let dh = '';
+  for (const j of ['opus', 'gemini', 'gpt']) for (const w of ['fable', 'opus'])
+    dh += `<tr><th>${JN[j]}</th><td>${WN[w]}</td><td>${pr(j, w, 'lines', n)}</td><td>${pr(j, w, 'kinds', n)}</td><td>${pr(j, w, 'classic', pc)}</td><td>${pr(j, w, 'reversal', pc)}</td><td>${pr(j, w, 'risk', n)}</td></tr>`;
+  document.getElementById('v6dom').innerHTML = dh;
+})();
+
 // 原文との比較表
 (function origTable() {
   const rows = T.filter(t => t.group === 'orig');
@@ -351,19 +392,21 @@ const state = { topic: 'o2', model: 'opus', hl: true };
 try { const s = JSON.parse(localStorage.getItem('uchida-compare') || '{}'); if (typeof s.hl === 'boolean') state.hl = s.hl; } catch (e) {}
 const hh = location.hash.replace('#', '').split('-');
 if (T.some(d => d.id === hh[0])) state.topic = hh[0];
-if (hh[1] === 'gpt' || hh[1] === 'opus') state.model = hh[1];
+if (['gpt', 'opus', 'fable'].includes(hh[1])) state.model = hh[1];
 
-const tagOf = d => (d.group === 'fresh' || d.group === 'longfresh') ? '<span class="tag fresh">判断に未使用</span>' : d.group === 'orig' ? '<span class="tag orig">原文あり</span>' : '';
+const tagOf = d => (d.group === 'fresh' || d.group === 'longfresh' || d.group === 'domain') ? '<span class="tag fresh">判断に未使用</span>' : d.group === 'orig' ? '<span class="tag orig">原文あり</span>' : '';
+const WNAME = { gpt: 'GPT', opus: 'Opus', fable: 'Fable' };
 function cell(d, m) {
+  if (!d.pieces[m]) return '<span class="rk">—</span>';
   const p = d.pieces[m], b = p.before.reader, a = p.after.reader;
   const on = d.id === state.topic && m === state.model ? ' on' : '';
   const dn = (b.opus?.overall != null && a.opus?.overall != null && a.opus.overall < b.opus.overall) ? ' down' : '';
-  return `<button type="button" class="cell${on}" data-t="${d.id}" data-m="${m}" aria-label="${esc(d.name)}、${m === 'gpt' ? 'GPT' : 'Opus'}の文章を表示">
+  return `<button type="button" class="cell${on}" data-t="${d.id}" data-m="${m}" aria-label="${esc(d.name)}、${WNAME[m]}の文章を表示">
     <span class="sc"><span class="b">${num(b.opus?.overall)}</span><span class="arrow">→</span><span class="a${dn}">${num(a.opus?.overall)}</span></span>
     <span class="sc-g">（${num(b.gemini?.overall)}→${num(a.gemini?.overall)}）</span></button>`;
 }
 function renderOverview() {
-  document.getElementById('ov').innerHTML = T.map(d => `<tr><th>${esc(d.name)}${tagOf(d)}<small>${d.id.toUpperCase()}・${esc(d.genre)}</small></th><td>${cell(d, 'gpt')}</td><td>${cell(d, 'opus')}</td></tr>`).join('');
+  document.getElementById('ov').innerHTML = T.map(d => `<tr><th>${esc(d.name)}${tagOf(d)}<small>${d.id.toUpperCase()}・${esc(d.genre)}</small></th><td>${cell(d, 'gpt')}</td><td>${cell(d, 'opus')}</td><td>${cell(d, 'fable')}</td></tr>`).join('');
 }
 function axes(r) {
   if (!r?.opus) return '';
@@ -372,15 +415,16 @@ function axes(r) {
   return `<div class="axes">${[...AX.filter(([k]) => k !== 'overall'), ...LX].map(([k, l]) => `<span>${l} <b>${pct(k) ? num(r.opus[k]) + '%' : num(r.opus[k])}</b></span>`).join('')}</div>`;
 }
 function sheet(kind, p, group) {
-  const label = kind === 'before' ? '適用前' : '適用後';
-  const sub = kind === 'before' ? 'skillなし／「内田樹の文体で」と指示' : (group === 'orig' ? 'skill v4.1' : group.startsWith('long') ? 'skill v5（長文対応）' : 'skill v4');
+  const label = group === 'domain' ? (kind === 'before' ? '変更前（v5）' : '変更後（v6）') : (kind === 'before' ? '適用前' : '適用後');
+  const sub = group === 'domain' ? (kind === 'before' ? '補助線の領域を広げる前の skill' : '補助線の領域を広げた skill')
+    : kind === 'before' ? 'skillなし／「内田樹の文体で」と指示' : (group === 'orig' ? 'skill v4.1' : group.startsWith('long') ? 'skill v5（長文対応）' : 'skill v4');
   const r = p.reader;
   const rank = r.opus?.rank ? `${r.opus.rank}位／${r.opus.of}本中（Opus）` : '';
   const style = p.style ? `<span>文体の再現度（参考）<b style="font-size:14px">${num(p.style.opus)}</b>／${num(p.style.gemini)}</span>` : '';
   return `<article class="sheet ${kind}" aria-label="${label}">
     <div class="sheet-head">
       <div class="cond"><strong>${label}</strong><small>${sub}</small></div>
-      <div class="scores"><span>読み物の総合 Opus審査<b>${num(r.opus?.overall)}</b></span><span>Gemini審査<b>${num(r.gemini?.overall)}</b></span><span>${rank}</span>${style}</div>
+      <div class="scores"><span>読み物の総合 Opus審査<b>${num(r.opus?.overall)}</b></span><span>Gemini審査<b>${num(r.gemini?.overall)}</b></span>${r.gpt ? `<span>GPT審査<b>${num(r.gpt.overall)}</b></span>` : ''}<span>${rank}</span>${style}</div>
       ${axes(r)}
       <div class="stats">${p.chars.toLocaleString()}字（原稿用紙${(p.chars / 400).toFixed(1)}枚）・${p.paras_n}段落・<span${p.contrast > 0 ? ' class="hit"' : ''}>「〜ではない。〜である」型${p.contrast}回</span></div>
     </div>
@@ -388,7 +432,10 @@ function sheet(kind, p, group) {
   </article>`;
 }
 function render() {
-  const d = T.find(x => x.id === state.topic), p = d.pieces[state.model];
+  const d = T.find(x => x.id === state.topic);
+  if (!d.pieces[state.model]) state.model = Object.keys(d.pieces)[0];
+  const p = d.pieces[state.model];
+  for (const b of document.querySelectorAll('.seg button')) b.disabled = !d.pieces[b.dataset.m];
   document.getElementById('topic').value = d.id;
   for (const b of document.querySelectorAll('.seg button')) b.setAttribute('aria-pressed', String(b.dataset.m === state.model));
   document.getElementById('hl').checked = state.hl;
@@ -409,7 +456,7 @@ function render() {
   try { history.replaceState(null, '', `#${d.id}-${state.model}`); } catch (e) {}
 }
 const sel = document.getElementById('topic');
-sel.innerHTML = [['orig', '原文と同じテーマ'], ['heldout', '改善に使っていないテーマ'], ['fresh', '判断に一度も使っていないテーマ'], ['long', '長文・改善に使った課題'], ['longfresh', '長文・判断に使っていない課題']]
+sel.innerHTML = [['orig', '原文と同じテーマ'], ['heldout', '改善に使っていないテーマ'], ['fresh', '判断に一度も使っていないテーマ'], ['long', '長文・改善に使った課題'], ['longfresh', '長文・判断に使っていない課題'], ['domain', '補助線の領域を広げる検証（v5とv6）']]
   .map(([g, l]) => `<optgroup label="${l}">${T.filter(d => d.group === g).map(d => `<option value="${d.id}">${d.id.toUpperCase()}　${esc(d.name)}</option>`).join('')}</optgroup>`).join('');
 sel.addEventListener('change', e => { state.topic = e.target.value; render(); });
 for (const b of document.querySelectorAll('.seg button')) b.addEventListener('click', () => { state.model = b.dataset.m; render(); });

@@ -1,0 +1,8 @@
+S01 v6_gpt_p5
+S02 v5_gpt_p5
+S03 v5_opus_p5
+S04 v6_opus_p5
+S05 v6_gpt_p6
+S06 v5_opus_p6
+S07 v5_gpt_p6
+S08 v6_opus_p6

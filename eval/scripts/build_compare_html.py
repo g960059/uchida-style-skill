@@ -43,7 +43,14 @@ TOPICS = {
     "l3": ("「わかりやすさ」の求めすぎ", "新書の一章 8000字", "long"),
     "l4": ("スポーツ観戦の熱狂", "長編エッセイ 4000字", "longfresh"),
     "l5": ("本を読むということ", "講演録 5000字", "longfresh"),
+    "p1": ("会議が長くなる", "エッセイ 1200字", "domain"),
+    "p2": ("「おすすめ」に従う買い物", "エッセイ 1200字・書き手は物流倉庫勤務", "domain"),
+    "p3": ("子どもの習い事", "新聞コラム 1000字・書き手は渓流釣りが趣味", "domain"),
+    "p4": ("転職が当たり前に", "新聞コラム 800字", "domain"),
+    "p5": ("行列に並ぶ人たち", "長編エッセイ 4000字", "domain"),
+    "p6": ("ちょうどいい距離", "看護学校の卒業式講演 4500字・話し手は元看護師", "domain"),
 }
+CLASSIC = {"思想・哲学", "武道・稽古", "古典・伝統芸能", "映画・文学・漫画などの作品", "昔の職業・商習慣"}
 ORIG = {  # 原文（本文は載せない）
     "o1": ("笑いと人文知", "https://blog.tatsuru.com/2026/10/16_0831.html"),
     "o2": ("さよならAI", "https://blog.tatsuru.com/2026/11/09_1126.html"),
@@ -70,7 +77,9 @@ def reader_scores(dirs):
     wins = defaultdict(lambda: [0, 0])
     for d in map(Path, dirs):
         idmap = read_map(d)
-        for judge in ("opus", "gemini"):
+        for judge in ("opus", "gemini", "gpt"):
+            if not (d / f"judge_{judge}.md").exists():
+                continue
             data = load_json(d / f"judge_{judge}.md")
             for sid, sc in data.get("scores", {}).items():
                 name = idmap[sid]
@@ -148,26 +157,57 @@ def piece(path, reader, style=None):
     }
 
 
-def summarize(agg, group):
+def summarize(agg, group, raw=False):
     out = {}
     for (dname, judge, writer, cond), d in agg.items():
         if dname not in group:
             continue
-        key = f"{judge}|{writer}|{'after' if cond in ('v4', 'after', 'v5') else cond}"
+        c = cond if raw else ('after' if cond in ('v4', 'after', 'v5') else cond)
+        key = f"{judge}|{writer}|{c}"
         for k, v in d.items():
             out.setdefault(key, defaultdict(list))[k] += v
     return {k: {a: round(sum(v) / len(v), 2) for a, v in d.items()} for k, d in out.items()}
 
 
+def domain_summary(d):
+    """補助線の分類（domain_rubric.md）を 審査員|条件|書き手 ごとに集計する。"""
+    d = Path(d)
+    idmap = read_map(d)
+    out = {}
+    for judge in ("opus", "gemini", "gpt"):
+        f = d / f"judge_{judge}.md"
+        if not f.exists():
+            continue
+        data = load_json(f)
+        acc = defaultdict(list)
+        for sid, v in data.items():
+            cond, writer, _ = idmap[sid].split("_")
+            acc[(cond, writer)] += v.get("lines", [])
+        for (cond, writer), ls in acc.items():
+            n = len(ls) or 1
+            doms = {l.get("domain", "?") for l in ls}
+            out[f"{judge}|{writer}|{cond}"] = {
+                "lines": len(ls), "kinds": len(doms),
+                "classic": round(sum(l.get("domain") in CLASSIC for l in ls) / n, 2),
+                "reversal": round(sum(bool(l.get("reversal")) for l in ls) / n, 2),
+                "risk": sum(bool(l.get("fact_risk")) for l in ls),
+            }
+    return out
+
+
 def main(tpl, out, r3):
     long_dirs = [EVAL / "reader" / f"long1_{t}" for t in ("l1", "l2", "l3", "l4", "l5")]
-    per, agg, wins = reader_scores([EVAL / "reader" / "R1", EVAL / "reader" / "R2", r3, *long_dirs])
+    dom_dirs = [EVAL / "reader" / "domain2_short", EVAL / "reader" / "domain2_long"]
+    per, agg, wins = reader_scores([EVAL / "reader" / "R1", EVAL / "reader" / "R2", r3, *long_dirs, *dom_dirs])
     style = style_scores()
     topics = []
     for t, (name, genre, group) in TOPICS.items():
         if group == "orig":
             prompt = (EVAL / "orig" / f"{t}.md").read_text()
             base, after = EVAL / "orig", "after"
+        elif group == "domain":
+            prompt = (EVAL / "domain" / f"{t}.md").read_text()
+            base, after = EVAL / "domain", "v6"
         elif group in ("long", "longfresh"):
             prompt = (EVAL / "long" / f"{t}.md").read_text()
             base, after = EVAL / "long" / ("cmp" if group == "long" else "r1"), "v5"
@@ -178,12 +218,14 @@ def main(tpl, out, r3):
         plines = prompt.strip().splitlines()
         item = {
             "id": t, "name": name, "genre": genre, "group": group,
-            "prompt": plines[0] if original else plines[-1],
+            "prompt": plines[0] if original else ("　".join(plines[1:]) if group == "domain" else plines[-1]),
             "original": original, "pieces": {},
         }
-        for m in ("gpt", "opus"):
+        writers = ("opus", "fable") if group == "domain" else ("gpt", "opus")
+        before = "v5" if group == "domain" else "before"
+        for m in writers:
             item["pieces"][m] = {}
-            for cond, label in (("before", "before"), (after, "after")):
+            for cond, label in ((before, "before"), (after, "after")):
                 sty = None
                 if group in ("heldout", "fresh"):
                     sty = style.get((STYLE_BUNDLE[(cond, t)], f"{cond}_{m}_{t}"))
@@ -199,7 +241,10 @@ def main(tpl, out, r3):
             "orig": summarize(agg, {Path(r3).name}),
             "long_dev": summarize(agg, {"long1_l1", "long1_l2", "long1_l3"}),
             "long_fresh": summarize(agg, {"long1_l4", "long1_l5"}),
+            "v6_short": summarize(agg, {"domain2_short"}, raw=True),
+            "v6_long": summarize(agg, {"domain2_long"}, raw=True),
         },
+        "domain": domain_summary(EVAL / "reader" / "domain2_all"),
         "wins": {"|".join(k): v for k, v in wins.items()},
     }
     js = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
