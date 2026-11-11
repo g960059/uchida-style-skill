@@ -1,0 +1,6 @@
+S01 v5_gpt_l3
+S02 v42_gpt_l3
+S03 before_opus_l3
+S04 v5_opus_l3
+S05 before_gpt_l3
+S06 v42_opus_l3

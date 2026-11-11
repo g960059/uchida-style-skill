@@ -1,0 +1,16 @@
+S01 v4_opus_h1
+S02 v42_gpt_h1
+S03 v4_gpt_h1
+S04 v42_opus_h1
+S05 v4_gpt_h5
+S06 v42_opus_h5
+S07 v42_gpt_h5
+S08 v4_opus_h5
+S09 v42_opus_h7
+S10 v4_opus_h7
+S11 v4_gpt_h7
+S12 v42_gpt_h7
+S13 v42_gpt_h8
+S14 v42_opus_h8
+S15 v4_opus_h8
+S16 v4_gpt_h8

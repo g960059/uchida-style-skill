@@ -3,3 +3,5 @@ eval/**/.gpt_*.log
 eval/**/.judge_gemini.log
 eval/**/.gemini_run.log
 eval/rounds/*.gen.log
+eval/*.log
+eval/long/*.log

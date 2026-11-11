@@ -176,6 +176,16 @@ mark { background: none; color: inherit; }
     <p class="note">審査員には、内田樹のこともskillのことも伝えていません。書き手と条件を伏せ、適用前と適用後を同じ束に混ぜて、10点満点で採点させました（「もっと読みたい」は0〜100%を10で割って表示）。審査員：Claude Opus 5.5（xhigh）と Gemini 4 Argon（high）。</p>
   </section>
 
+  <section aria-labelledby="s-long">
+    <h2 id="s-long"><small>長い文章（4000〜8000字）</small>長文でも効くか</h2>
+    <p class="note">短文用の規則のまま長文を書かせると、GPT では効かないか逆効果でした（全体の見通しや中だるみが悪化）。そこで長文用の指針（全体の地図、楽章ごとの新しい場面、二度目のひねり、中だるみ対策、小見出し、書き終えたあとの点検）を加えた版を v5 としました。読み物としての評価（長文版：中だるみのなさ、全体の見通し、反復のなさ、読む手が鈍った地点を追加）で、課題ごとに伏せて混ぜて採点しています。</p>
+    <div class="tablebox"><table>
+      <thead><tr><th>課題</th><th>審査</th><th>書き手</th><th>総合</th><th>中だるみのなさ</th><th>全体の見通し</th><th>反復のなさ</th><th>読みやすさ</th><th>読む手が鈍った地点</th></tr></thead>
+      <tbody id="longtab"></tbody>
+    </table></div>
+    <p class="note">「改善に使った3課題」は L1 失敗が怖い（5000字）、L2 地方で暮らす・講演録（6000字）、L3 「わかりやすさ」・新書の一章（8000字）。「判断に使っていない2課題」は L4 スポーツ観戦（4000字）、L5 本を読む・講演録（5000字）。数字は「skillなし → 短文用の skill（v4.2） → 長文対応の skill（v5）」。なお、skillなしの Opus は L2 の講演録の冒頭で実在の人物を名乗っていました（このページでは「〇〇」に伏せています）。skill は実在の人物へのなりすましを禁じており、skillありの文章ではこれは起きていません。読む手が鈍った地点は、一般の読者が最初に飛ばし読みしたくなる地点（本文の何%か、100は最後まで）。</p>
+  </section>
+
   <section aria-labelledby="s-orig">
     <h2 id="s-orig"><small>原文との比較・4テーマ（O1〜O4）</small>内田樹の原文、適用前、適用後</h2>
     <p class="note">内田樹のブログ「内田樹の研究室」の記事4本と同じテーマ・形式・字数で、論旨は伝えずに書かせました。原文を含む5本を書き手を伏せて混ぜ、同じ「読み物としての評価」にかけています。数字は総合点（Opus審査／Gemini審査）と、5本の中での順位（Opus審査）です。原文は著作権のため本文を載せず、記事へのリンクだけを置いています。原文は実在の出来事や人名を含むので、審査員がそこから人間の文章だと見分けた可能性があります。</p>
@@ -189,7 +199,7 @@ mark { background: none; color: inherit; }
   </section>
 
   <section aria-labelledby="s-read">
-    <h2 id="s-read"><small>読み比べ</small>12テーマの文章</h2>
+    <h2 id="s-read"><small>読み比べ</small>17テーマの文章</h2>
     <div class="tablebox">
       <table>
         <thead><tr><th>テーマ</th><th>GPT 6 astra　Opus審査（Gemini審査）</th><th>Opus 5.5　Opus審査（Gemini審査）</th></tr></thead>
@@ -224,7 +234,7 @@ mark { background: none; color: inherit; }
         <ul>
           <li>Gemini は全体に Opus より甘く、同じ文章に1〜2点高い点を付けます。条件間の順位は両審査員でほぼ一致しました。</li>
           <li>H1〜H8 の「文体の再現度」は、適用前と適用後を別々の束で採点したので参考値です。読み物としての評価は同じ束で採点しています。</li>
-          <li>O1〜O4 の適用後は v4.1、H1〜H8 の適用後は v4 です（v4.1 はskill内の例文を削っただけの差分）。</li>
+          <li>O1〜O4 の適用後は v4.1、H1〜H8 の適用後は v4、L1〜L5（長文）の適用後は v5 です。v4.2 で短文の手直し（段落の詰め込み、貸し借りの語彙、矛先を自分に、実在の素材）を入れ、H1・H5・H7・H8 で v4 より読み物として良くなることを確かめています（Opus審査 GPT 6.5→7.0、Opus 6.0→7.75）。</li>
           <li>テーマは各4〜8本と少なく、数字の細かな差には意味がありません。</li>
         </ul>
       </div>
@@ -297,6 +307,23 @@ charts();
 matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', charts);
 new MutationObserver(charts).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
+// 長文の表
+(function longTable() {
+  const L = [['long_dev', '改善に使った3課題'], ['long_fresh', '判断に使っていない2課題']];
+  const cols = ['overall', 'sustain', 'architecture', 'repetition', 'readability', 'dropoff'];
+  let h = '';
+  for (const [g, gl] of L) for (const j of ['opus', 'gemini']) for (const w of ['gpt', 'opus']) {
+    const sum = D.summary[g];
+    const cell = k => {
+      const b = sv(sum, j, w, 'before', k), m = sv(sum, j, w, 'v42', k), a = sv(sum, j, w, 'after', k);
+      const fmt = v => k === 'dropoff' ? (v == null ? '—' : Math.round(v) + '%') : f1(v);
+      return `<span class="num b">${fmt(b)}</span>${m != null ? `<span class="rk"> → ${fmt(m)}</span>` : ''}<span class="rk"> → </span><span class="num a">${fmt(a)}</span>`;
+    };
+    h += `<tr><th>${gl}</th><td>${j === 'opus' ? 'Opus' : 'Gemini'}</td><td>${w === 'gpt' ? 'GPT 6 astra' : 'Opus 5.5'}</td>${cols.map(k => `<td>${cell(k)}</td>`).join('')}</tr>`;
+  }
+  document.getElementById('longtab').innerHTML = h;
+})();
+
 // 原文との比較表
 (function origTable() {
   const rows = T.filter(t => t.group === 'orig');
@@ -326,7 +353,7 @@ const hh = location.hash.replace('#', '').split('-');
 if (T.some(d => d.id === hh[0])) state.topic = hh[0];
 if (hh[1] === 'gpt' || hh[1] === 'opus') state.model = hh[1];
 
-const tagOf = d => d.group === 'fresh' ? '<span class="tag fresh">判断に未使用</span>' : d.group === 'orig' ? '<span class="tag orig">原文あり</span>' : '';
+const tagOf = d => (d.group === 'fresh' || d.group === 'longfresh') ? '<span class="tag fresh">判断に未使用</span>' : d.group === 'orig' ? '<span class="tag orig">原文あり</span>' : '';
 function cell(d, m) {
   const p = d.pieces[m], b = p.before.reader, a = p.after.reader;
   const on = d.id === state.topic && m === state.model ? ' on' : '';
@@ -340,11 +367,13 @@ function renderOverview() {
 }
 function axes(r) {
   if (!r?.opus) return '';
-  return `<div class="axes">${AX.filter(([k]) => k !== 'overall').map(([k, l]) => `<span>${l} <b>${k === 'read_more' ? num(r.opus[k]) + '%' : num(r.opus[k])}</b></span>`).join('')}</div>`;
+  const LX = [['sustain', '中だるみのなさ'], ['architecture', '全体の見通し'], ['repetition', '反復のなさ'], ['dropoff', '鈍った地点']].filter(([k]) => r.opus[k] != null);
+  const pct = k => k === 'read_more' || k === 'dropoff';
+  return `<div class="axes">${[...AX.filter(([k]) => k !== 'overall'), ...LX].map(([k, l]) => `<span>${l} <b>${pct(k) ? num(r.opus[k]) + '%' : num(r.opus[k])}</b></span>`).join('')}</div>`;
 }
 function sheet(kind, p, group) {
   const label = kind === 'before' ? '適用前' : '適用後';
-  const sub = kind === 'before' ? 'skillなし／「内田樹の文体で」と指示' : (group === 'orig' ? 'skill v4.1' : 'skill v4');
+  const sub = kind === 'before' ? 'skillなし／「内田樹の文体で」と指示' : (group === 'orig' ? 'skill v4.1' : group.startsWith('long') ? 'skill v5（長文対応）' : 'skill v4');
   const r = p.reader;
   const rank = r.opus?.rank ? `${r.opus.rank}位／${r.opus.of}本中（Opus）` : '';
   const style = p.style ? `<span>文体の再現度（参考）<b style="font-size:14px">${num(p.style.opus)}</b>／${num(p.style.gemini)}</span>` : '';
@@ -380,7 +409,7 @@ function render() {
   try { history.replaceState(null, '', `#${d.id}-${state.model}`); } catch (e) {}
 }
 const sel = document.getElementById('topic');
-sel.innerHTML = [['orig', '原文と同じテーマ'], ['heldout', '改善に使っていないテーマ'], ['fresh', '判断に一度も使っていないテーマ']]
+sel.innerHTML = [['orig', '原文と同じテーマ'], ['heldout', '改善に使っていないテーマ'], ['fresh', '判断に一度も使っていないテーマ'], ['long', '長文・改善に使った課題'], ['longfresh', '長文・判断に使っていない課題']]
   .map(([g, l]) => `<optgroup label="${l}">${T.filter(d => d.group === g).map(d => `<option value="${d.id}">${d.id.toUpperCase()}　${esc(d.name)}</option>`).join('')}</optgroup>`).join('');
 sel.addEventListener('change', e => { state.topic = e.target.value; render(); });
 for (const b of document.querySelectorAll('.seg button')) b.addEventListener('click', () => { state.model = b.dataset.m; render(); });

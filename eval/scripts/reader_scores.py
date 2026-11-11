@@ -13,7 +13,8 @@ from collections import defaultdict
 from pathlib import Path
 
 KEYS = ["interest", "readability", "immersion", "exhilaration", "insight", "dynamics",
-        "voice", "no_ai_smell", "memorability", "overall", "read_more"]
+        "voice", "no_ai_smell", "memorability", "sustain", "architecture", "repetition",
+        "overall", "read_more", "dropoff"]
 
 avg = defaultdict(lambda: defaultdict(list))   # (judge, writer, cond) -> key -> [..]
 wins = defaultdict(lambda: [0, 0])             # (judge, writer) -> [v4が上, 対戦数]
@@ -45,7 +46,7 @@ for d in map(Path, sys.argv[1:]):
                 ranks[(judge, writer, cond)].append(r)
             for writer in ("gpt", "opus"):
                 b = [s for s in pos if idmap[s][:2] == (writer, "before")]
-                a = [s for s in pos if idmap[s][:2] == (writer, "v4")]
+                a = [s for s in pos if idmap[s][:2] in ((writer, "v4"), (writer, "after"))]
                 if a and b:
                     wins[(judge, writer)][0] += pos[a[0]] < pos[b[0]]
                     wins[(judge, writer)][1] += 1

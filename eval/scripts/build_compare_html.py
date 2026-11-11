@@ -22,7 +22,8 @@ import contrast_stats as cs  # noqa: E402
 import flow_stats as fs  # noqa: E402
 
 AXES = ["interest", "readability", "immersion", "exhilaration", "insight", "dynamics",
-        "voice", "no_ai_smell", "memorability", "overall", "read_more"]
+        "voice", "no_ai_smell", "memorability", "sustain", "architecture", "repetition",
+        "overall", "read_more", "dropoff"]
 
 TOPICS = {
     "h1": ("SNSでの一斉批判", "エッセイ", "heldout"),
@@ -37,6 +38,11 @@ TOPICS = {
     "o2": ("生成AIと書くこと", "受験生向け雑誌への寄稿", "orig"),
     "o3": ("「〇〇ファースト」と投票", "週刊誌のコラム", "orig"),
     "o4": ("農業と教育", "新聞コラム（連載の一回）", "orig"),
+    "l1": ("失敗が怖い", "長編エッセイ 5000字", "long"),
+    "l2": ("地方で暮らすということ", "講演録 6000字", "long"),
+    "l3": ("「わかりやすさ」の求めすぎ", "新書の一章 8000字", "long"),
+    "l4": ("スポーツ観戦の熱狂", "長編エッセイ 4000字", "longfresh"),
+    "l5": ("本を読むということ", "講演録 5000字", "longfresh"),
 }
 ORIG = {  # 原文（本文は載せない）
     "o1": ("笑いと人文知", "https://blog.tatsuru.com/2026/10/16_0831.html"),
@@ -79,7 +85,7 @@ def reader_scores(dirs):
                 pos = {idmap[s]: i for i, s in enumerate(order)}
                 for writer in ("gpt", "opus"):
                     b = [n for n in pos if n.startswith(f"before_{writer}_")]
-                    a = [n for n in pos if n.startswith(f"v4_{writer}_") or n.startswith(f"after_{writer}_")]
+                    a = [n for n in pos if n.startswith((f"v4_{writer}_", f"after_{writer}_", f"v5_{writer}_"))]
                     if a and b:
                         wins[(d.name, judge, writer, "after>before")][0] += pos[a[0]] < pos[b[0]]
                         wins[(d.name, judge, writer, "after>before")][1] += 1
@@ -127,6 +133,8 @@ def mark_contrast(text):
 
 def piece(path, reader, style=None):
     text = Path(path).read_text()
+    # skillなしの生成文が実在の人物を名乗った箇所は、公開ページでは伏せる
+    text = text.replace("ご紹介いただきました内田です", "ご紹介いただきました〇〇です")
     lines = [l for l in text.strip().splitlines() if l.strip()]
     title = None
     if lines and len(lines[0]) <= 30 and "。" not in lines[0]:
@@ -145,20 +153,24 @@ def summarize(agg, group):
     for (dname, judge, writer, cond), d in agg.items():
         if dname not in group:
             continue
-        key = f"{judge}|{writer}|{'after' if cond in ('v4', 'after') else cond}"
+        key = f"{judge}|{writer}|{'after' if cond in ('v4', 'after', 'v5') else cond}"
         for k, v in d.items():
             out.setdefault(key, defaultdict(list))[k] += v
     return {k: {a: round(sum(v) / len(v), 2) for a, v in d.items()} for k, d in out.items()}
 
 
 def main(tpl, out, r3):
-    per, agg, wins = reader_scores([EVAL / "reader" / "R1", EVAL / "reader" / "R2", r3])
+    long_dirs = [EVAL / "reader" / f"long1_{t}" for t in ("l1", "l2", "l3", "l4", "l5")]
+    per, agg, wins = reader_scores([EVAL / "reader" / "R1", EVAL / "reader" / "R2", r3, *long_dirs])
     style = style_scores()
     topics = []
     for t, (name, genre, group) in TOPICS.items():
         if group == "orig":
             prompt = (EVAL / "orig" / f"{t}.md").read_text()
             base, after = EVAL / "orig", "after"
+        elif group in ("long", "longfresh"):
+            prompt = (EVAL / "long" / f"{t}.md").read_text()
+            base, after = EVAL / "long" / ("cmp" if group == "long" else "r1"), "v5"
         else:
             prompt = (EVAL / "heldout" / f"{t}.md").read_text()
             base, after = EVAL / "heldout", "v4"
@@ -173,7 +185,7 @@ def main(tpl, out, r3):
             item["pieces"][m] = {}
             for cond, label in (("before", "before"), (after, "after")):
                 sty = None
-                if group != "orig":
+                if group in ("heldout", "fresh"):
                     sty = style.get((STYLE_BUNDLE[(cond, t)], f"{cond}_{m}_{t}"))
                 item["pieces"][m][label] = piece(base / cond / f"{m}_{t}.md", per.get(f"{cond}_{m}_{t}", {}), sty)
         if group == "orig":
@@ -185,6 +197,8 @@ def main(tpl, out, r3):
         "summary": {
             "heldout": summarize(agg, {"R1", "R2"}),
             "orig": summarize(agg, {Path(r3).name}),
+            "long_dev": summarize(agg, {"long1_l1", "long1_l2", "long1_l3"}),
+            "long_fresh": summarize(agg, {"long1_l4", "long1_l5"}),
         },
         "wins": {"|".join(k): v for k, v in wins.items()},
     }
