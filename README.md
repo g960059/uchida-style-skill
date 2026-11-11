@@ -6,17 +6,20 @@
 
 ## 使い方
 
-- Claude Code：このリポジトリで開けば `.claude/skills/uchida-style` から読み込まれる。他のプロジェクトで使うなら `skills/uchida-style` を `~/.claude/skills/` にコピーする。
-- Codex：`.agents/skills/uchida-style` から読み込まれる。
+**明示的に呼び出したときだけ動く**設定にしてある（依頼の文面から自動で起動することはない）。
+
+- Claude Code：`/uchida-style` に続けて依頼を書く。例：`/uchida-style ふるさと納税について800字のコラム`。このリポジトリで開けば `.claude/skills/uchida-style` から読み込まれる。他のプロジェクトで使うなら `skills/uchida-style` を `~/.claude/skills/` にコピーする。自動起動は SKILL.md の `disable-model-invocation: true` で止めている。
+- Codex：`$uchida-style` に続けて依頼を書く。`.agents/skills/uchida-style` から読み込まれる。自動起動は `agents/openai.yaml` の `policy.allow_implicit_invocation: false` で止めている。
 - それ以外：`skills/uchida-style/SKILL.md` と `references/*.md` をプロンプトに入れる（`eval/scripts/bundle_skill.sh` で1ファイルにまとめられる）。
 
-依頼の例：「内田樹っぽく、ふるさと納税についてのコラムを800字で」「この文章を内田樹の文体で書き直して」
+依頼が添えられていないときは、何を書くかを尋ねてから始める。
 
 ## 構成
 
 ```
 skills/uchida-style/
-  SKILL.md                     出力ルール、手順、密度の上限
+  SKILL.md                     呼び出し方、出力ルール、手順、密度の上限（disable-model-invocation: true）
+  agents/openai.yaml           Codex 用の設定（自動起動しない）
   references/
     thinking-patterns.md       思考のエンジン（問いのずらし方）と補助線の系統
     disclosure.md              全体の情報開示・展開（開示の型・入口・常識の扱い・着地のメニュー）
